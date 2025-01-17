@@ -42,6 +42,7 @@ class SimpleVim:
         self.modified = 0
         self.status = "hello world"
         self.scroll_offset = 0  # Number of lines to scroll (vertical offset)
+        self.tab_width = 4
 
         # Load the file content if a filename is provided
         if filename:
@@ -158,6 +159,11 @@ class SimpleVim:
             return False
         elif key == ctrl(ord("s")):  # Save file
             self.save_file()
+        elif key == 9:
+            line = self.text[self.cursor_y]
+            self.text[self.cursor_y] = line[:self.cursor_x] + [ord('\t')] * self.tab_width + line[self.cursor_x:]
+            self.cursor_x += self.tab_width
+            self.modified += 1
         elif key in (curses.KEY_BACKSPACE, 8):  # Backspace
             if self.cursor_x > 0:
                 self.cursor_x -= 1
